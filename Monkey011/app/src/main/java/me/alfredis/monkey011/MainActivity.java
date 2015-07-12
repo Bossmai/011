@@ -1,5 +1,6 @@
 package me.alfredis.monkey011;
 
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -7,35 +8,47 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
-
-    private TextView informationTextView;
-    private Button refreshButton;
+    private TableLayout infoTableLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        informationTextView = (TextView) findViewById(R.id.information_textview);
-        refreshButton = (Button) findViewById(R.id.refresh_button);
+        infoTableLayout = (TableLayout) findViewById(R.id.information_table_layout);
 
-        refreshButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                StringBuilder sb = new StringBuilder();
+        TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
 
-                TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        infoTableLayout.addView(createInforowTextView("F", "Manufacturer", Build.MANUFACTURER));
+        infoTableLayout.addView(createInforowTextView("F", "ModelName", Build.MODEL));
+        infoTableLayout.addView(createInforowTextView("F", "ModelId", Build.ID));
 
-                sb.append("IMEI:" + tm.getDeviceId());
+        infoTableLayout.addView(createInforowTextView("T", "DeviceId", tm.getDeviceId()));
+        infoTableLayout.addView(createInforowTextView("T", "SimOperatorName", tm.getSimOperatorName()));
+        infoTableLayout.addView(createInforowTextView("T", "SimSerialNumber", tm.getSimSerialNumber()));
+        //TODO: int value hook
+        infoTableLayout.addView(createInforowTextView("F", "SimState", String.valueOf(tm.getSimState())));
+        infoTableLayout.addView(createInforowTextView("T", "SubscriberId", tm.getSubscriberId()));
 
-                informationTextView.setText(sb.toString());
-            }
-        });
+        //sb.append("manufacturer:" + Build.MANUFACTURER + "\n");
+        //sb.append("modelName:" + Build.MODEL + "\n");
+        //sb.append("modelId:" + Build.ID + "\n");
+
+        //sb.append("\n");
+
+        //from TelephonyManager
+        //sb.append("IMEI:" + tm.getDeviceId() + "\n");
+        //sb.append("SimOperatorName:" + tm.getSimOperatorName() + "\n");
+        //sb.append("SimSerialNumber:" + tm.getSimSerialNumber() + "\n");
+        //sb.append("SimState:" + tm.getSimState() + "\n");
+        //sb.append("SubscriberId:" + tm.getSubscriberId() + "\n");
     }
 
     @Override
@@ -59,4 +72,40 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private TextView createInfoContentTextView(String text, int color) {
+        TextView temp = new TextView(this);
+        temp.setText(text);
+        temp.setBackgroundColor(color);
+
+        TableRow.LayoutParams tableRowParam = new TableRow.LayoutParams();
+        tableRowParam.setMargins(2, 2, 2, 2);
+        temp.setLayoutParams(tableRowParam);
+
+        return temp;
+    }
+
+    private TableRow createInforowTextView(String isDone, String key, String value) {
+        TableRow row = new TableRow(this);
+
+        TableLayout.LayoutParams tableLayoutParam = new TableLayout.LayoutParams();
+        tableLayoutParam.setMargins(2, 2, 2, 2);
+        row.setLayoutParams(tableLayoutParam);
+        if (isDone.equals("T")) {
+            row.setBackgroundColor(getResources().getColor(android.R.color.white));
+            row.addView(createInfoContentTextView(isDone, getResources().getColor(android.R.color.holo_orange_light)));
+            row.addView(createInfoContentTextView(key, getResources().getColor(android.R.color.holo_orange_light)));
+            row.addView(createInfoContentTextView(value, getResources().getColor(android.R.color.holo_orange_light)));
+        } else {
+            row.setBackgroundColor(getResources().getColor(android.R.color.white));
+            row.addView(createInfoContentTextView(isDone, getResources().getColor(android.R.color.white)));
+            row.addView(createInfoContentTextView(key, getResources().getColor(android.R.color.white)));
+            row.addView(createInfoContentTextView(value, getResources().getColor(android.R.color.white)));
+        }
+
+
+        return row;
+
+    }
+
 }
