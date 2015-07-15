@@ -1,9 +1,15 @@
 package me.alfredis.monkey011;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +31,19 @@ public class MainActivity extends ActionBarActivity {
         infoTableLayout = (TableLayout) findViewById(R.id.information_table_layout);
 
         TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+
+        DisplayMetrics metric = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+
+        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+
+
+        infoTableLayout.addView(createInforowTextView("TBD", "connect_mode", "TBD"));
+        infoTableLayout.addView(createInforowTextView("F", "density", String.valueOf(metric.density)));
+        infoTableLayout.addView(createInforowTextView("F", "densityDpi", String.valueOf(metric.densityDpi)));
+        infoTableLayout.addView(createInforowTextView("TBD", "get", "TBD"));
+        infoTableLayout.addView(createInforowTextView("T", "getBSSID", wifiInfo.getBSSID()));
 
         infoTableLayout.addView(createInforowTextView("F", "Manufacturer", Build.MANUFACTURER));
         infoTableLayout.addView(createInforowTextView("F", "ModelName", Build.MODEL));
