@@ -44,6 +44,17 @@ public class MainActivity extends ActionBarActivity {
         infoTableLayout.addView(createInforowTextView("F", "densityDpi", String.valueOf(metric.densityDpi)));
         infoTableLayout.addView(createInforowTextView("TBD", "get", "TBD"));
         infoTableLayout.addView(createInforowTextView("T", "getBSSID", wifiInfo.getBSSID()));
+        infoTableLayout.addView(createInforowTextView("T", "getDeviceId", tm.getDeviceId()));
+        infoTableLayout.addView(createInforowTextView("TBD", "getJiZhan", "TBD"));
+        infoTableLayout.addView(createInforowTextView("T", "getLine1Number", tm.getLine1Number()));
+        infoTableLayout.addView(createInforowTextView("T", "getMacAddress", wifiInfo.getMacAddress()));
+        infoTableLayout.addView(createInforowTextView("TBD", "getMetrics", "TBD"));
+        infoTableLayout.addView(createInforowTextView("T", "getNetworkCountryIso", tm.getNetworkCountryIso()));
+        infoTableLayout.addView(createInforowTextView("T", "getNetworkOperator", tm.getNetworkOperator()));
+        infoTableLayout.addView(createInforowTextView("T", "getNetworkOperatorName", tm.getNetworkOperatorName()));
+        infoTableLayout.addView(createInforowTextView("F", "getNetworkType", String.valueOf(tm.getNetworkType())));
+        infoTableLayout.addView(createInforowTextView("F", "getPhoneType", String.valueOf(tm.getPhoneType())));
+
 
         infoTableLayout.addView(createInforowTextView("F", "Manufacturer", Build.MANUFACTURER));
         infoTableLayout.addView(createInforowTextView("F", "ModelName", Build.MODEL));
