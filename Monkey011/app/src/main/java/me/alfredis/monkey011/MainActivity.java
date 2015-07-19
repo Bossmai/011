@@ -6,9 +6,12 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.telephony.CellLocation;
 import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +21,9 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -31,6 +37,14 @@ public class MainActivity extends ActionBarActivity {
         infoTableLayout = (TableLayout) findViewById(R.id.information_table_layout);
 
         TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        CellLocation cellLocation = tm.getCellLocation();
+        int lac = 0, cid = 0;
+        GsmCellLocation gsmCellLocation = null;
+        if (cellLocation != null && cellLocation instanceof GsmCellLocation) {
+            gsmCellLocation = (GsmCellLocation) cellLocation;
+            lac = gsmCellLocation.getLac();
+            cid = gsmCellLocation.getCid();
+        }
 
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -38,78 +52,79 @@ public class MainActivity extends ActionBarActivity {
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
+        Class systemPropertiesClass = null;
+        Object systemProperties = null;
+        Method systemPropertiesGetMethod = null;
+        try {
+            systemPropertiesClass = Class.forName("android.os.SystemProperties");
+            systemProperties = systemPropertiesClass.newInstance();
+            Class[] argClasses = new Class[2];
+            argClasses[0] = String.class;
+            argClasses[1] = String.class;
+            systemPropertiesGetMethod = systemPropertiesClass.getMethod("get", argClasses);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
 
-        infoTableLayout.addView(createInforowTextView("TBD", "connect_mode", "TBD"));
-        infoTableLayout.addView(createInforowTextView("F", "density", String.valueOf(metric.density)));
-        infoTableLayout.addView(createInforowTextView("F", "densityDpi", String.valueOf(metric.densityDpi)));
-        infoTableLayout.addView(createInforowTextView("TBD", "get", "TBD"));
+        Object[] args = new Object[2];
+        args[0] = "gsm.version.baseband";
+        args[1] = "no message";
+
+
+        infoTableLayout.addView(createInforowTextView("TBD", "connect_mode", "Not found."));
+        infoTableLayout.addView(createInforowTextView("T", "density", String.valueOf(metric.density)));
+        infoTableLayout.addView(createInforowTextView("T", "densityDpi", String.valueOf(metric.densityDpi)));
+        if (systemPropertiesClass != null && systemProperties != null && systemPropertiesGetMethod != null) {
+            try {
+                infoTableLayout.addView(createInforowTextView("T", "get", (String) systemPropertiesGetMethod.invoke(systemProperties, args)));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
         infoTableLayout.addView(createInforowTextView("T", "getBSSID", wifiInfo.getBSSID()));
         infoTableLayout.addView(createInforowTextView("T", "getDeviceId", tm.getDeviceId()));
-        infoTableLayout.addView(createInforowTextView("TBD", "getJiZhan", "TBD"));
+        infoTableLayout.addView(createInforowTextView("T", "getJiZhan", lac + "_" + cid));
         infoTableLayout.addView(createInforowTextView("T", "getLine1Number", tm.getLine1Number()));
         infoTableLayout.addView(createInforowTextView("T", "getMacAddress", wifiInfo.getMacAddress()));
-        infoTableLayout.addView(createInforowTextView("TBD", "getMetrics", "TBD"));
+        infoTableLayout.addView(createInforowTextView("T", "getMetrics", metric.widthPixels + "x" + metric.heightPixels));
         infoTableLayout.addView(createInforowTextView("T", "getNetworkCountryIso", tm.getNetworkCountryIso()));
         infoTableLayout.addView(createInforowTextView("T", "getNetworkOperator", tm.getNetworkOperator()));
         infoTableLayout.addView(createInforowTextView("T", "getNetworkOperatorName", tm.getNetworkOperatorName()));
-        infoTableLayout.addView(createInforowTextView("F", "getNetworkType", String.valueOf(tm.getNetworkType())));
-        infoTableLayout.addView(createInforowTextView("F", "getPhoneType", String.valueOf(tm.getPhoneType())));
-
-        infoTableLayout.addView(createInforowTextView("F", "getRadioVersion", String.valueOf(Build.getRadioVersion())));
+        infoTableLayout.addView(createInforowTextView("T", "getNetworkType", String.valueOf(tm.getNetworkType())));
+        infoTableLayout.addView(createInforowTextView("T", "getPhoneType", String.valueOf(tm.getPhoneType())));
+        infoTableLayout.addView(createInforowTextView("T", "getRadioVersion", Build.getRadioVersion()));
         infoTableLayout.addView(createInforowTextView("T", "getSSID", wifiInfo.getSSID()));
         infoTableLayout.addView(createInforowTextView("T", "getSimCountryIso", tm.getSimCountryIso()));
         infoTableLayout.addView(createInforowTextView("T", "getSimOperator", tm.getSimOperator()));
         infoTableLayout.addView(createInforowTextView("T", "getSimOperatorName", tm.getSimOperatorName()));
         infoTableLayout.addView(createInforowTextView("T", "getSimSerialNumber", tm.getSimSerialNumber()));
-        infoTableLayout.addView(createInforowTextView("F", "getSimState", String.valueOf(tm.getSimState())));
-        infoTableLayout.addView(createInforowTextView("TBD", "getString", "TBD"));
+        infoTableLayout.addView(createInforowTextView("T", "getSimState", String.valueOf(tm.getSimState())));
+        infoTableLayout.addView(createInforowTextView("T", "getString", Settings.Secure.getString(getContentResolver(), "android_id")));
         infoTableLayout.addView(createInforowTextView("T", "getSubscriberId", tm.getSubscriberId()));
-        infoTableLayout.addView(createInforowTextView("TBD", "gps", "TBD"));
-        infoTableLayout.addView(createInforowTextView("F", "scaledDensity", String.valueOf(metric.scaledDensity)));
-        infoTableLayout.addView(createInforowTextView("TBD", "setCpuName", "TBD"));
-        infoTableLayout.addView(createInforowTextView("TBD", "sign", "TBD"));
-        infoTableLayout.addView(createInforowTextView("TBD", "xdpi", "TBD"));
-        infoTableLayout.addView(createInforowTextView("TBD", "ydpi", "TBD"));
-        infoTableLayout.addView(createInforowTextView("TBD", "ARCH", "TBD"));
-        infoTableLayout.addView(createInforowTextView("F", "BRAND", Build.BRAND));
-        infoTableLayout.addView(createInforowTextView("F", "DEVICE", Build.DEVICE));
-        infoTableLayout.addView(createInforowTextView("F", "FINGERPRINT", Build.FINGERPRINT));
-        infoTableLayout.addView(createInforowTextView("F", "HARDWARE", Build.HARDWARE));
-        infoTableLayout.addView(createInforowTextView("F", "MANUFACTURER", Build.MANUFACTURER));
-        infoTableLayout.addView(createInforowTextView("F", "MODEL", Build.MODEL));
-        infoTableLayout.addView(createInforowTextView("F", "PRODUCT", Build.PRODUCT));
-        infoTableLayout.addView(createInforowTextView("TBD", "RELEASE", "TBD"));
-        infoTableLayout.addView(createInforowTextView("TBD", "SDK", "TBD"));
-
-
-
-
-
-
-
-        infoTableLayout.addView(createInforowTextView("F", "Manufacturer", Build.MANUFACTURER));
-        infoTableLayout.addView(createInforowTextView("F", "ModelName", Build.MODEL));
-        infoTableLayout.addView(createInforowTextView("F", "ModelId", Build.ID));
-
-        infoTableLayout.addView(createInforowTextView("T", "DeviceId", tm.getDeviceId()));
-        infoTableLayout.addView(createInforowTextView("T", "SimOperatorName", tm.getSimOperatorName()));
-        infoTableLayout.addView(createInforowTextView("T", "SimSerialNumber", tm.getSimSerialNumber()));
-        //TODO: int value hook
-        infoTableLayout.addView(createInforowTextView("F", "SimState", String.valueOf(tm.getSimState())));
-        infoTableLayout.addView(createInforowTextView("T", "SubscriberId", tm.getSubscriberId()));
-
-        //sb.append("manufacturer:" + Build.MANUFACTURER + "\n");
-        //sb.append("modelName:" + Build.MODEL + "\n");
-        //sb.append("modelId:" + Build.ID + "\n");
-
-        //sb.append("\n");
-
-        //from TelephonyManager
-        //sb.append("IMEI:" + tm.getDeviceId() + "\n");
-        //sb.append("SimOperatorName:" + tm.getSimOperatorName() + "\n");
-        //sb.append("SimSerialNumber:" + tm.getSimSerialNumber() + "\n");
-        //sb.append("SimState:" + tm.getSimState() + "\n");
-        //sb.append("SubscriberId:" + tm.getSubscriberId() + "\n");
+        infoTableLayout.addView(createInforowTextView("TBD", "gps", "Not found."));
+        infoTableLayout.addView(createInforowTextView("T", "scaledDensity", String.valueOf(metric.scaledDensity)));
+        infoTableLayout.addView(createInforowTextView("TBD", "setCpuName", "ASM code."));
+        infoTableLayout.addView(createInforowTextView("TBD", "sign", "Not found."));
+        infoTableLayout.addView(createInforowTextView("T", "xdpi", String.valueOf(metric.xdpi)));
+        infoTableLayout.addView(createInforowTextView("T", "ydpi", String.valueOf(metric.ydpi)));
+        infoTableLayout.addView(createInforowTextView("T", "ARCH", Build.CPU_ABI + "_" + Build.CPU_ABI2));
+        infoTableLayout.addView(createInforowTextView("T", "BRAND", Build.BRAND));
+        infoTableLayout.addView(createInforowTextView("T", "DEVICE", Build.DEVICE));
+        infoTableLayout.addView(createInforowTextView("T", "FINGERPRINT", Build.FINGERPRINT));
+        infoTableLayout.addView(createInforowTextView("T", "HARDWARE", Build.HARDWARE));
+        infoTableLayout.addView(createInforowTextView("T", "MANUFACTURER", Build.MANUFACTURER));
+        infoTableLayout.addView(createInforowTextView("T", "MODEL", Build.MODEL));
+        infoTableLayout.addView(createInforowTextView("T", "PRODUCT", Build.PRODUCT));
+        infoTableLayout.addView(createInforowTextView("T", "RELEASE", Build.VERSION.RELEASE));
+        infoTableLayout.addView(createInforowTextView("T", "SDK", Build.VERSION.SDK));
     }
 
     @Override
