@@ -55,6 +55,37 @@ public class MainActivity extends ActionBarActivity {
         infoTableLayout.addView(createInforowTextView("F", "getNetworkType", String.valueOf(tm.getNetworkType())));
         infoTableLayout.addView(createInforowTextView("F", "getPhoneType", String.valueOf(tm.getPhoneType())));
 
+        infoTableLayout.addView(createInforowTextView("F", "getRadioVersion", String.valueOf(Build.getRadioVersion())));
+        infoTableLayout.addView(createInforowTextView("T", "getSSID", wifiInfo.getSSID()));
+        infoTableLayout.addView(createInforowTextView("T", "getSimCountryIso", tm.getSimCountryIso()));
+        infoTableLayout.addView(createInforowTextView("T", "getSimOperator", tm.getSimOperator()));
+        infoTableLayout.addView(createInforowTextView("T", "getSimOperatorName", tm.getSimOperatorName()));
+        infoTableLayout.addView(createInforowTextView("T", "getSimSerialNumber", tm.getSimSerialNumber()));
+        infoTableLayout.addView(createInforowTextView("F", "getSimState", String.valueOf(tm.getSimState())));
+        infoTableLayout.addView(createInforowTextView("TBD", "getString", "TBD"));
+        infoTableLayout.addView(createInforowTextView("T", "getSubscriberId", tm.getSubscriberId()));
+        infoTableLayout.addView(createInforowTextView("TBD", "gps", "TBD"));
+        infoTableLayout.addView(createInforowTextView("F", "scaledDensity", String.valueOf(metric.scaledDensity)));
+        infoTableLayout.addView(createInforowTextView("TBD", "setCpuName", "TBD"));
+        infoTableLayout.addView(createInforowTextView("TBD", "sign", "TBD"));
+        infoTableLayout.addView(createInforowTextView("TBD", "xdpi", "TBD"));
+        infoTableLayout.addView(createInforowTextView("TBD", "ydpi", "TBD"));
+        infoTableLayout.addView(createInforowTextView("TBD", "ARCH", "TBD"));
+        infoTableLayout.addView(createInforowTextView("F", "BRAND", Build.BRAND));
+        infoTableLayout.addView(createInforowTextView("F", "DEVICE", Build.DEVICE));
+        infoTableLayout.addView(createInforowTextView("F", "FINGERPRINT", Build.FINGERPRINT));
+        infoTableLayout.addView(createInforowTextView("F", "HARDWARE", Build.HARDWARE));
+        infoTableLayout.addView(createInforowTextView("F", "MANUFACTURER", Build.MANUFACTURER));
+        infoTableLayout.addView(createInforowTextView("F", "MODEL", Build.MODEL));
+        infoTableLayout.addView(createInforowTextView("F", "PRODUCT", Build.PRODUCT));
+        infoTableLayout.addView(createInforowTextView("TBD", "RELEASE", "TBD"));
+        infoTableLayout.addView(createInforowTextView("TBD", "SDK", "TBD"));
+
+
+
+
+
+
 
         infoTableLayout.addView(createInforowTextView("F", "Manufacturer", Build.MANUFACTURER));
         infoTableLayout.addView(createInforowTextView("F", "ModelName", Build.MODEL));
