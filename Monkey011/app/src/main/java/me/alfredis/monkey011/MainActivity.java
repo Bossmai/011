@@ -3,6 +3,8 @@ package me.alfredis.monkey011;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -82,6 +84,15 @@ public class MainActivity extends ActionBarActivity {
         args[0] = "gsm.version.baseband";
         args[1] = "no message";
 
+        double latitude = 0;
+        double longtitude = 0;
+        LocationManager locationManager = (LocationManager) getSystemService((Context.LOCATION_SERVICE));
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (location != null) {
+            latitude = location.getLatitude();
+            longtitude = location.getLongitude();
+        }
+
 
         infoTableLayout.addView(createInforowTextView("TBD", "connect_mode", "Not found."));
         infoTableLayout.addView(createInforowTextView("T", "density", String.valueOf(metric.density)));
@@ -115,7 +126,7 @@ public class MainActivity extends ActionBarActivity {
         infoTableLayout.addView(createInforowTextView("T", "getSimState", String.valueOf(tm.getSimState())));
         infoTableLayout.addView(createInforowTextView("T", "getString", Settings.Secure.getString(getContentResolver(), "android_id")));
         infoTableLayout.addView(createInforowTextView("T", "getSubscriberId", tm.getSubscriberId()));
-        infoTableLayout.addView(createInforowTextView("TBD", "gps", "Not found."));
+        infoTableLayout.addView(createInforowTextView("T", "gps", longtitude + ", " + latitude));
         infoTableLayout.addView(createInforowTextView("T", "scaledDensity", String.valueOf(metric.scaledDensity)));
         infoTableLayout.addView(createInforowTextView("TBD", "setCpuName", "ASM code."));
         infoTableLayout.addView(createInforowTextView("TBD", "sign", "Not found."));
@@ -131,7 +142,56 @@ public class MainActivity extends ActionBarActivity {
         infoTableLayout.addView(createInforowTextView("T", "PRODUCT", Build.PRODUCT));
         infoTableLayout.addView(createInforowTextView("T", "RELEASE", Build.VERSION.RELEASE));
         infoTableLayout.addView(createInforowTextView("T", "SDK", Build.VERSION.SDK));
-        infoTableLayout.addView(createInforowTextView("T", "isUserAMonkey", String.valueOf(activityManager.isUserAMonkey())));
+        infoTableLayout.addView(createInforowTextView("TBD", "isUserAMonkey", String.valueOf(activityManager.isUserAMonkey())));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.CODENAME", String.valueOf(Build.VERSION.CODENAME)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.INCREMENTAL", String.valueOf(Build.VERSION.INCREMENTAL)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.RELEASE", String.valueOf(Build.VERSION.RELEASE)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.SDK", String.valueOf(Build.VERSION.SDK)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.SDK_INT", String.valueOf(Build.VERSION.SDK_INT)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.BOARD", String.valueOf(Build.BOARD)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.BOOTLOADER", String.valueOf(Build.BOOTLOADER)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.BRAND", String.valueOf(Build.BRAND)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.CPU_ABI", String.valueOf(Build.CPU_ABI)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.CPU_ABI2", String.valueOf(Build.CPU_ABI2)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.DEVICE", String.valueOf(Build.DEVICE)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.DISPLAY", String.valueOf(Build.DISPLAY)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.FINGERPRINT", String.valueOf(Build.FINGERPRINT)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.HARDWARE", String.valueOf(Build.HARDWARE)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.HOST", String.valueOf(Build.HOST)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.ID", String.valueOf(Build.ID)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.MANUFACTURER", String.valueOf(Build.MANUFACTURER)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.MODEL", String.valueOf(Build.MODEL)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.PRODUCT", String.valueOf(Build.PRODUCT)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.RADIO", String.valueOf(Build.RADIO)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.SERIAL", String.valueOf(Build.SERIAL)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.TAGS", String.valueOf(Build.TAGS)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.TIME", String.valueOf(Build.TIME)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.TYPE", String.valueOf(Build.TYPE)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.USER", String.valueOf(Build.USER)));
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.radioVersion", String.valueOf(Build.getRadioVersion())));
+
+
+        /*String[] temp = Build.SUPPORTED_32_BIT_ABIS;
+        StringBuilder sb = new StringBuilder();
+        for (String s : temp) {
+            sb.append(s + "\n");
+        }
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.SUPPORTED_32_BIT_ABIS", sb.toString()));
+
+        String[] temp2 = Build.SUPPORTED_64_BIT_ABIS;
+        StringBuilder sb2 = new StringBuilder();
+        for (String s : temp) {
+            sb.append(s + "\n");
+        }
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.SUPPORTED_64_BIT_ABIS", sb2.toString()));
+
+        String[] temp3 = Build.SUPPORTED_ABIS;
+        StringBuilder sb3 = new StringBuilder();
+        for (String s : temp) {
+            sb.append(s + "\n");
+        }
+        infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.SUPPORTED_ABIS", sb3.toString()));*/
+
 
 
         StringBuilder sb = new StringBuilder();
