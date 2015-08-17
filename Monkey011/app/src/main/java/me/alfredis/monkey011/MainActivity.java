@@ -1,5 +1,6 @@
 package me.alfredis.monkey011;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
@@ -22,6 +23,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -37,6 +42,7 @@ public class MainActivity extends ActionBarActivity {
         infoTableLayout = (TableLayout) findViewById(R.id.information_table_layout);
 
         TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        ActivityManager activityManager =  (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
         CellLocation cellLocation = tm.getCellLocation();
         int lac = 0, cid = 0;
         GsmCellLocation gsmCellLocation = null;
@@ -125,6 +131,23 @@ public class MainActivity extends ActionBarActivity {
         infoTableLayout.addView(createInforowTextView("T", "PRODUCT", Build.PRODUCT));
         infoTableLayout.addView(createInforowTextView("T", "RELEASE", Build.VERSION.RELEASE));
         infoTableLayout.addView(createInforowTextView("T", "SDK", Build.VERSION.SDK));
+        infoTableLayout.addView(createInforowTextView("T", "isUserAMonkey", String.valueOf(activityManager.isUserAMonkey())));
+
+
+        StringBuilder sb = new StringBuilder();
+        try {
+            FileReader fr = new FileReader("/sys/class/net/wlan0/address");
+            BufferedReader br = new BufferedReader(fr);
+            String text = br.readLine();
+            sb.append(text);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        infoTableLayout.addView(createInforowTextView("T", "file", sb.toString()));
+
     }
 
     @Override
