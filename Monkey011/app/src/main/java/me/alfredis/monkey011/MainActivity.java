@@ -208,6 +208,24 @@ public class MainActivity extends ActionBarActivity {
 
         infoTableLayout.addView(createInforowTextView("T", "file", sb.toString()));
 
+        if (systemPropertiesClass != null && systemProperties != null && systemPropertiesGetMethod != null) {
+            try {
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.bat", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.bat", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.gps", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.gps", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.acc", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.acc", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.cam", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.cam", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.scr", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.scr", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.rmt", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.rmt", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.did", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.did", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.net", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.net", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genymotion.version", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.bat", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.baseband", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.baseband", "no message"})));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
