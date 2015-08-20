@@ -219,7 +219,15 @@ public class MainActivity extends ActionBarActivity {
                 infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.did", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.did", "no message"})));
                 infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.net", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.net", "no message"})));
                 infoTableLayout.addView(createInforowTextView("T", "ro.genymotion.version", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.bat", "no message"})));
-                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.baseband", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.genyd.caps.baseband", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.baseband", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.hardware", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.baseband", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"ro.boot.hardware", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.baseband", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"androVM.gles.first_try", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.baseband", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"androVM.gles.renderer", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.baseband", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"androVM.gles", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.baseband", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"androVM.inited", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.baseband", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"androVM.vbox_dpi", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.baseband", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"androVM.vbox_graph_mode", "no message"})));
+                infoTableLayout.addView(createInforowTextView("T", "ro.genyd.caps.baseband", (String) systemPropertiesGetMethod.invoke(systemProperties, new String[] {"androVM.vkeyboard_mode", "no message"})));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
