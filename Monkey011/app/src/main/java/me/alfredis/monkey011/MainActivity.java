@@ -13,9 +13,11 @@ import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.telephony.CellLocation;
+import android.telephony.NeighboringCellInfo;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +33,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -54,6 +57,31 @@ public class MainActivity extends ActionBarActivity {
             cid = gsmCellLocation.getCid();
         }
 
+
+        // 返回值MCC + MNC
+        String operator = tm.getNetworkOperator();
+        int mcc = Integer.parseInt(operator.substring(0, 3));
+        int mnc = Integer.parseInt(operator.substring(3));
+
+        // 中国移动和中国联通获取LAC、CID的方式
+        GsmCellLocation newlocation = (GsmCellLocation) tm.getCellLocation();
+        int newLac = newlocation.getLac();
+        int newcellId = newlocation.getCid();
+
+        Log.i("test", " MCC = " + mcc + "\t MNC = " + mnc + "\t LAC = " + newLac + "\t CID = " + newcellId);
+        List<NeighboringCellInfo> infos = tm.getNeighboringCellInfo();
+        StringBuffer sb2 = new StringBuffer("总数 : " + infos.size() + "\n");
+        gsmCellLocation = (GsmCellLocation) cellLocation;
+        lac = gsmCellLocation.getLac();
+        cid = gsmCellLocation.getCid();
+
+        for (NeighboringCellInfo info1 : infos) { // 根据邻区总数进行循环
+            sb2.append(" LAC : " + info1.getLac()); // 取出当前邻区的LAC
+            sb2.append(" CID : " + info1.getCid()); // 取出当前邻区的CID
+            sb2.append(" BSSS : " + (info1.getRssi()) + "\n"); // 获取邻区基站信号强度
+        }
+
+        Log.i("hello", " 获取邻区基站信息:" + sb2.toString());
         DisplayMetrics metric = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
 
@@ -169,6 +197,7 @@ public class MainActivity extends ActionBarActivity {
         infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.TYPE", String.valueOf(Build.TYPE)));
         infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.USER", String.valueOf(Build.USER)));
         infoTableLayout.addView(createInforowTextView("TBD", "Build.VERSION.radioVersion", String.valueOf(Build.getRadioVersion())));
+        infoTableLayout.addView(createInforowTextView("TBD", "cellinfo", sb2.toString()));
 
 
         /*String[] temp = Build.SUPPORTED_32_BIT_ABIS;
